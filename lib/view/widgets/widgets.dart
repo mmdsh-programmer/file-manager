@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:file_manager/file_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/const.dart';

@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:file_manager/file_manager.dart';
-import 'package:mohammad_shakeri_file_manager/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:storage_info/storage_info.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:video_player/video_player.dart';
+import 'package:just_audio/just_audio.dart';
 
 class FilesController extends GetxController {
   final FileManagerController controller = FileManagerController();
@@ -342,5 +345,151 @@ class FilesController extends GetxController {
     }
 
     update();
+  }
+}
+
+// Image Preview Screen
+class ImagePreviewScreen extends StatelessWidget {
+  final String filePath;
+
+  const ImagePreviewScreen({required this.filePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Image Preview')),
+      body: PhotoView(
+        imageProvider: FileImage(File(filePath)),
+      ),
+    );
+  }
+}
+
+// PDF Preview Screen
+class PDFPreviewScreen extends StatelessWidget {
+  final String filePath;
+
+  const PDFPreviewScreen({required this.filePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('PDF Preview')),
+      body: PDFView(filePath: filePath),
+    );
+  }
+}
+
+// Video Preview Screen
+class VideoPreviewScreen extends StatefulWidget {
+  final String filePath;
+
+  const VideoPreviewScreen({required this.filePath});
+
+  @override
+  _VideoPreviewScreenState createState() => _VideoPreviewScreenState();
+}
+
+class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.file(File(widget.filePath))
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Video Preview')),
+      body: Center(
+        child: _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              )
+            : CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+// Audio Preview Screen
+class AudioPreviewScreen extends StatefulWidget {
+  final String filePath;
+
+  const AudioPreviewScreen({required this.filePath});
+
+  @override
+  _AudioPreviewScreenState createState() => _AudioPreviewScreenState();
+}
+
+class _AudioPreviewScreenState extends State<AudioPreviewScreen> {
+  late AudioPlayer _audioPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer = AudioPlayer();
+    _audioPlayer.setFilePath(widget.filePath).then((_) {
+      _audioPlayer.play();
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Audio Preview')),
+      body: Center(
+        child: Text('Playing Audio...'),
+      ),
+    );
+  }
+}
+
+// Text Preview Screen
+class TextPreviewScreen extends StatelessWidget {
+  final String filePath;
+
+  const TextPreviewScreen({required this.filePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String>(
+      future: File(filePath).readAsString(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Scaffold(
+            appBar: AppBar(title: Text('Text Preview')),
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(snapshot.data ?? 'Error loading file'),
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(title: Text('Text Preview')),
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
   }
 }

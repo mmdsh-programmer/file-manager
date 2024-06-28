@@ -32,6 +32,55 @@ class _HomePageState extends State<HomePage> {
     getPermission();
   }
 
+  void previewFile(FileSystemEntity entity) {
+    if (entity is File) {
+      String filePath = entity.path;
+      String fileExtension = filePath.split('.').last;
+
+      if (['jpg', 'jpeg', 'png', 'gif'].contains(fileExtension)) {
+        // Preview Image
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ImagePreviewScreen(filePath: filePath),
+            ));
+      } else if (fileExtension == 'pdf') {
+        // Preview PDF
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PDFPreviewScreen(filePath: filePath),
+            ));
+      } else if (['mp4', 'avi', 'mkv'].contains(fileExtension)) {
+        // Preview Video
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoPreviewScreen(filePath: filePath),
+            ));
+      } else if (['mp3', 'wav'].contains(fileExtension)) {
+        // Preview Audio
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AudioPreviewScreen(filePath: filePath),
+            ));
+      } else if (['txt', 'json', 'xml'].contains(fileExtension)) {
+        // Preview Text
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TextPreviewScreen(filePath: filePath),
+            ));
+      } else {
+        // Unsupported file type
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Unsupported file type')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ControlBackButton(
@@ -285,6 +334,7 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                             subtitle: subtitle(
                               entity,
@@ -297,6 +347,8 @@ class _HomePageState extends State<HomePage> {
                                   myController.alert(
                                       context, "Enable to open this folder");
                                 }
+                              } else {
+                                previewFile(entity);
                               }
                             },
                           ),
@@ -348,8 +400,8 @@ class _HomePageState extends State<HomePage> {
                     isMoving = false;
                   });
                 },
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Text("Move here ",
                         style: TextStyle(fontWeight: FontWeight.w500)),
                     Icon(Icons.paste),
