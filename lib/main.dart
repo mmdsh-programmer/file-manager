@@ -1,9 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'view/screens/home_screen.dart';
 
 void main() => runApp(MyApp());
@@ -20,11 +18,16 @@ class _MyAppState extends State<MyApp> {
       builder: (context, orientation, deviceType) => GetMaterialApp(
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.dark,
-        theme: ThemeData(useMaterial3: true),
-        home:const HomePage(),
+        theme: ThemeData(useMaterial3: true, fontFamily: "IranYekan"),
+        locale: const Locale('fa'),
+        supportedLocales: const [Locale('fa')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: const HomePage(),
       ),
     );
   }
 }
-
-

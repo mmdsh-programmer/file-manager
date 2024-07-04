@@ -32,53 +32,98 @@ class _HomePageState extends State<HomePage> {
     getPermission();
   }
 
-  void previewFile(FileSystemEntity entity) {
-    if (entity is File) {
-      String filePath = entity.path;
-      String fileExtension = filePath.split('.').last;
+  AppBar appBar(BuildContext context) {
+    return AppBar(
+      actions: [
+        Visibility(
+            visible: isMoving,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  selectedFile.rename(
+                      "${myController.controller.getCurrentPath}/${FileManager.basename(selectedFile)}");
+                  setState(() {
+                    isMoving = false;
+                  });
+                },
+                child: const Row(
+                  children: [
+                    Text("انتقال به اینجا",
+                        style: TextStyle(fontWeight: FontWeight.w500)),
+                    Icon(Icons.paste),
+                  ],
+                ),
+              ),
+            )),
+        Visibility(
+          visible: !isMoving,
+          child: PopupMenuButton(
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry>[
+                  PopupMenuItem(
+                    value: 'button1',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(
+                          Icons.file_present,
+                          color: orage2,
+                        ),
+                        const Text("فایل جدید"),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'button2',
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.folder_open, color: orange),
+                        const Text("پوشه جدید"),
+                      ],
+                    ),
+                  ),
+                ];
+              },
+              onSelected: (value) {
+                switch (value) {
+                  case 'button1':
+                    myController.createFile(
+                        context, myController.controller.getCurrentPath);
 
-      if (['jpg', 'jpeg', 'png', 'gif'].contains(fileExtension)) {
-        // Preview Image
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ImagePreviewScreen(filePath: filePath),
-            ));
-      } else if (fileExtension == 'pdf') {
-        // Preview PDF
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PDFPreviewScreen(filePath: filePath),
-            ));
-      } else if (['mp4', 'avi', 'mkv'].contains(fileExtension)) {
-        // Preview Video
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VideoPreviewScreen(filePath: filePath),
-            ));
-      } else if (['mp3', 'wav'].contains(fileExtension)) {
-        // Preview Audio
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AudioPreviewScreen(filePath: filePath),
-            ));
-      } else if (['txt', 'json', 'xml'].contains(fileExtension)) {
-        // Preview Text
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TextPreviewScreen(filePath: filePath),
-            ));
-      } else {
-        // Unsupported file type
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Unsupported file type')),
-        );
-      }
-    }
+                    break;
+                  case 'button2':
+                    myController.createFolder(context);
+
+                    break;
+                }
+              },
+              child: const Icon(Icons.create_new_folder_outlined)),
+        ),
+        Visibility(
+          visible: !isMoving,
+          child: IconButton(
+            onPressed: () => myController.sort(context),
+            icon: const Icon(Icons.sort_rounded),
+          ),
+        ),
+      ],
+      title: const Text("مدیریت فایل",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () async {
+          await myController.controller.goToParentDirectory().then((value) {
+            if (myController.controller.getCurrentPath ==
+                "/storage/emulated/0") {
+              fullScreen = false;
+              setState(() {});
+            }
+          });
+        },
+      ),
+    );
   }
 
   @override
@@ -128,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                                   suffixIcon: const Icon(Icons.search),
                                   filled: true,
                                   fillColor: Colors.grey[200],
-                                  hintText: 'Search Files',
+                                  hintText: 'جست و جو فایل ها',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16.0),
                                     borderSide: BorderSide.none,
@@ -143,23 +188,23 @@ class _HomePageState extends State<HomePage> {
                               scrollDirection: Axis.horizontal,
                               children: [
                                 fileTypeWidget(
-                                    "Documents",
-                                    "${myController.documentSize.toStringAsFixed(2)} MB",
+                                    "اسناد",
+                                    "${myController.documentSize.toStringAsFixed(2)} مگابایت",
                                     "assets/3d/file.png",
                                     yellow),
                                 fileTypeWidget(
-                                    "Videos",
-                                    "${myController.videoSize.toStringAsFixed(2)} MB",
+                                    "فیلم ها",
+                                    "${myController.videoSize.toStringAsFixed(2)} مگابایت",
                                     "assets/3d/video.png",
                                     orange),
                                 fileTypeWidget(
-                                    "Images",
-                                    "${myController.imageSize.toStringAsFixed(2)} MB",
+                                    "عکس ها",
+                                    "${myController.imageSize.toStringAsFixed(2)} مگایایت",
                                     "assets/3d/image.png",
                                     black),
                                 fileTypeWidget(
-                                    "Musics",
-                                    "${myController.soundSize.toStringAsFixed(2)} MB",
+                                    "موسیقی ها",
+                                    "${myController.soundSize.toStringAsFixed(2)} مگابایت",
                                     "assets/3d/music.png",
                                     orange),
                               ],
@@ -172,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 10.0),
-                                  child: Text("Recent Files",
+                                  child: Text("فایل های اخیر",
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
@@ -184,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                                     setState(() {});
                                   },
                                   child: Text(
-                                    "See All",
+                                    "نمایش کلی",
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10.sp,
@@ -217,7 +262,7 @@ class _HomePageState extends State<HomePage> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Icon(Icons.delete, color: orange),
-                                          const Text("Delete"),
+                                          const Text("حذف"),
                                         ],
                                       ),
                                     ),
@@ -229,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           Icon(Icons.rotate_left_sharp,
                                               color: yellow),
-                                          const Text("Rename"),
+                                          const Text("ویرایش نام"),
                                         ],
                                       ),
                                     ),
@@ -241,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           Icon(Icons.move_down_rounded,
                                               color: black),
-                                          const Text("Move"),
+                                          const Text("انتقال"),
                                         ],
                                       ),
                                     )
@@ -274,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                                               TextEditingController();
                                           return AlertDialog(
                                             title: Text(
-                                                "Rename ${FileManager.basename(entity)}"),
+                                                "ویرایش ${FileManager.basename(entity)}"),
                                             content: TextField(
                                               controller: renameController,
                                             ),
@@ -283,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                 },
-                                                child: const Text("Cancel"),
+                                                child: const Text("انصراف"),
                                               ),
                                               TextButton(
                                                 onPressed: () async {
@@ -296,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                                                     setState(() {});
                                                   });
                                                 },
-                                                child: const Text("Rename"),
+                                                child: const Text("تایید"),
                                               ),
                                             ],
                                           );
@@ -345,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                                   myController.controller.openDirectory(entity);
                                 } catch (e) {
                                   myController.alert(
-                                      context, "Enable to open this folder");
+                                      context, "توانایی باز کردن این پوشه");
                                 }
                               } else {
                                 previewFile(entity);
@@ -385,97 +430,52 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  AppBar appBar(BuildContext context) {
-    return AppBar(
-      actions: [
-        Visibility(
-            visible: isMoving,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  selectedFile.rename(
-                      "${myController.controller.getCurrentPath}/${FileManager.basename(selectedFile)}");
-                  setState(() {
-                    isMoving = false;
-                  });
-                },
-                child: const Row(
-                  children: [
-                    Text("Move here ",
-                        style: TextStyle(fontWeight: FontWeight.w500)),
-                    Icon(Icons.paste),
-                  ],
-                ),
-              ),
-            )),
-        Visibility(
-          visible: !isMoving,
-          child: PopupMenuButton(
-              itemBuilder: (BuildContext context) {
-                return <PopupMenuEntry>[
-                  PopupMenuItem(
-                    value: 'button1',
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          Icons.file_present,
-                          color: orage2,
-                        ),
-                        const Text("New File     "),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 'button2',
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.folder_open, color: orange),
-                        const Text("New Folder"),
-                      ],
-                    ),
-                  ),
-                ];
-              },
-              onSelected: (value) {
-                switch (value) {
-                  case 'button1':
-                    myController.createFile(
-                        context, myController.controller.getCurrentPath);
+  void previewFile(FileSystemEntity entity) {
+    if (entity is File) {
+      String filePath = entity.path;
+      String fileExtension = filePath.split('.').last;
 
-                    break;
-                  case 'button2':
-                    myController.createFolder(context);
-
-                    break;
-                }
-              },
-              child: const Icon(Icons.create_new_folder_outlined)),
-        ),
-        Visibility(
-          visible: !isMoving,
-          child: IconButton(
-            onPressed: () => myController.sort(context),
-            icon: const Icon(Icons.sort_rounded),
-          ),
-        ),
-      ],
-      title: const Text("File Manager",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () async {
-          await myController.controller.goToParentDirectory().then((value) {
-            if (myController.controller.getCurrentPath ==
-                "/storage/emulated/0") {
-              fullScreen = false;
-              setState(() {});
-            }
-          });
-        },
-      ),
-    );
+      if (['jpg', 'jpeg', 'png', 'gif'].contains(fileExtension)) {
+        // Preview Image
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ImagePreviewScreen(filePath: filePath),
+            ));
+      } else if (fileExtension == 'pdf') {
+        // Preview PDF
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PDFPreviewScreen(filePath: filePath),
+            ));
+      } else if (['mp4', 'avi', 'mkv'].contains(fileExtension)) {
+        // Preview Video
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoPreviewScreen(filePath: filePath),
+            ));
+      } else if (['mp3', 'wav'].contains(fileExtension)) {
+        // Preview Audio
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AudioPreviewScreen(filePath: filePath),
+            ));
+      } else if (['txt', 'json', 'xml'].contains(fileExtension)) {
+        // Preview Text
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TextPreviewScreen(filePath: filePath),
+            ));
+      } else {
+        // Unsupported file type
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('نوع فایل پشتیبانی نمیشود')),
+        );
+      }
+    }
   }
 }
