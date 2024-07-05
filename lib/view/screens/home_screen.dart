@@ -126,12 +126,107 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Drawer drawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'دسته بندی اسناد',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.image),
+            title: Text('فایل های تصویری'),
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => DocumentPage(documentType: 'image'),
+            //     ),
+            //   );
+            // },
+          ),
+          ListTile(
+            leading: Icon(Icons.video_library),
+            title: Text('فایل های ویديویی'),
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => DocumentPage(documentType: 'video'),
+            //     ),
+            //   );
+            // },
+          ),
+          ListTile(
+            leading: Icon(Icons.audiotrack),
+            title: Text('فایل های صوتی'),
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => DocumentPage(documentType: 'audio'),
+            //     ),
+            //   );
+            // },
+          ),
+          ListTile(
+            leading: Icon(Icons.picture_as_pdf),
+            title: Text('فایل های PDF'),
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => DocumentPage(documentType: 'pdf'),
+            //     ),
+            //   );
+            // },
+          ),
+          ListTile(
+            leading: Icon(Icons.text_snippet),
+            title: Text('فایل های متنی'),
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => DocumentPage(documentType: 'text'),
+            //     ),
+            //   );
+            // },
+          ),
+          ListTile(
+            leading: Icon(Icons.question_mark),
+            title: Text('سایر فایل ها'),
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => DocumentPage(documentType: 'other'),
+            //     ),
+            //   );
+            // },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ControlBackButton(
       controller: myController.controller,
       child: Scaffold(
         appBar: appBar(context),
+        drawer: drawer(context),
         body: FileManager(
           controller: myController.controller,
           builder: (context, snapshot) {
@@ -179,6 +274,24 @@ class _HomePageState extends State<HomePage> {
                                     borderSide: BorderSide.none,
                                   ),
                                 ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                            child: TextButton(
+                              onPressed: () =>
+                                  Scaffold.of(context).openDrawer(),
+                              style: ButtonStyle(
+                                  backgroundColor: WidgetStateProperty.all(
+                                      Color.fromRGBO(255, 211, 182, 1))),
+                              child: const Row(
+                                children: [
+                                  Text(
+                                    "نمایش دسته بندی ها",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

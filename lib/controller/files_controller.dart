@@ -81,25 +81,25 @@ class FilesController extends GetxController {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                  title: const Text("Name"),
+                  title: const Text("نام"),
                   onTap: () {
                     controller.sortBy(SortBy.name);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text("Size"),
+                  title: const Text("حجم"),
                   onTap: () {
                     controller.sortBy(SortBy.size);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text("Date"),
+                  title: const Text("تاریخ"),
                   onTap: () {
                     controller.sortBy(SortBy.date);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: const Text("type"),
+                  title: const Text("نوع"),
                   onTap: () {
                     controller.sortBy(SortBy.type);
                     Navigator.pop(context);
