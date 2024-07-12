@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 import '../../controller/files_controller.dart';
 import '../../utils/const.dart';
 import '../widgets/widgets.dart';
+import '../screens/document_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage();
@@ -146,74 +147,80 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.image),
             title: Text('فایل های تصویری'),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => DocumentPage(documentType: 'image'),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DocumentPage(documentType: 'فایل های تصویری'),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.video_library),
             title: Text('فایل های ویديویی'),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => DocumentPage(documentType: 'video'),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DocumentPage(documentType: 'فایل های ویدیويی'),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.audiotrack),
             title: Text('فایل های صوتی'),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => DocumentPage(documentType: 'audio'),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DocumentPage(documentType: 'فایل های صوتی'),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.picture_as_pdf),
             title: Text('فایل های PDF'),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => DocumentPage(documentType: 'pdf'),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DocumentPage(documentType: 'فایل های PDF'),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.text_snippet),
             title: Text('فایل های متنی'),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => DocumentPage(documentType: 'text'),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DocumentPage(documentType: 'فایل های متنی'),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.question_mark),
             title: Text('سایر فایل ها'),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => DocumentPage(documentType: 'other'),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DocumentPage(documentType: 'سایر فایل ها'),
+                ),
+              );
+            },
           ),
         ],
       ),
