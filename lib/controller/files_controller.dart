@@ -127,17 +127,17 @@ class FilesController extends GetxController {
                 ListTile(
                   title: TextField(
                     decoration: const InputDecoration(
-                      hintText: "File Name",
+                      hintText: "نام فایل",
                     ),
                     controller: fileName,
                   ),
                 ),
                 ListTile(
-                  trailing: const Text("Bytes"),
+                  trailing: const Text("بایت"),
                   title: TextField(
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      hintText: "File Size",
+                      hintText: "حجم فایل",
                     ),
                     controller: fileSize,
                   ),
@@ -145,7 +145,7 @@ class FilesController extends GetxController {
                 ListTile(
                   title: TextField(
                     decoration: const InputDecoration(
-                      hintText: "File Extension",
+                      hintText: "پسوند فایل",
                     ),
                     controller: fileExtension,
                   ),
@@ -181,11 +181,11 @@ class FilesController extends GetxController {
                         });
                       }
                     } catch (e) {
-                      alert(context, "somthing went wrong");
+                      alert(context, "مشکل ناشناخته ای رخ داد");
                     }
                   },
                   child: const Text(
-                    'Create File',
+                    'ساخت فایل',
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -217,7 +217,7 @@ class FilesController extends GetxController {
                 ListTile(
                   title: TextField(
                     decoration: const InputDecoration(
-                      hintText: "Folder Name",
+                      hintText: "نام پوشه",
                       hintStyle: TextStyle(
                         color: Colors.grey,
                       ),
@@ -245,12 +245,12 @@ class FilesController extends GetxController {
                             "${controller.getCurrentPath}/${folderName.text}";
                       });
                     } catch (e) {
-                      alert(context, "Folder already exists");
+                      alert(context, "پوشه از قبل وجود دارد");
                     }
                     update();
                   },
                   child: const Text(
-                    'Create Folder',
+                    'ساخت پوشه',
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -286,7 +286,7 @@ class FilesController extends GetxController {
                   Navigator.pop(context);
                 },
                 child: const Text(
-                  'Ok',
+                  'متوجه شدم',
                   style: TextStyle(
                     color: Colors.black,
                   ),

@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          const DrawerHeader(
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
@@ -151,8 +151,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DocumentPage(documentType: 'فایل های تصویری'),
+                  builder: (context) => DocumentPage(documentType: "image"),
                 ),
               );
             },
@@ -164,8 +163,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DocumentPage(documentType: 'فایل های ویدیويی'),
+                  builder: (context) => DocumentPage(documentType: "video"),
                 ),
               );
             },
@@ -177,8 +175,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DocumentPage(documentType: 'فایل های صوتی'),
+                  builder: (context) => DocumentPage(documentType: "audio"),
                 ),
               );
             },
@@ -190,8 +187,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DocumentPage(documentType: 'فایل های PDF'),
+                  builder: (context) => DocumentPage(documentType: "pdf"),
                 ),
               );
             },
@@ -203,8 +199,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DocumentPage(documentType: 'فایل های متنی'),
+                  builder: (context) => DocumentPage(documentType: "text"),
                 ),
               );
             },
@@ -216,8 +211,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DocumentPage(documentType: 'سایر فایل ها'),
+                  builder: (context) => DocumentPage(documentType: "others"),
                 ),
               );
             },
@@ -495,7 +489,6 @@ class _HomePageState extends State<HomePage> {
                                 showFileExtension: true,
                               ),
                               style: TextStyle(
-                                fontStyle: FontStyle.italic,
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -509,8 +502,8 @@ class _HomePageState extends State<HomePage> {
                                 try {
                                   myController.controller.openDirectory(entity);
                                 } catch (e) {
-                                  myController.alert(
-                                      context, "توانایی باز کردن این پوشه");
+                                  myController.alert(context,
+                                      "توانایی باز کردن این پوشه نیست");
                                 }
                               } else {
                                 previewFile(entity);
