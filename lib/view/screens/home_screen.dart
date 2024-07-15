@@ -536,10 +536,12 @@ class _HomePageState extends State<HomePage> {
         await Permission.accessMediaLocation.request();
     final manageExternalStoragePermission =
         await Permission.manageExternalStorage.request();
+    final mediaLibrary = await Permission.mediaLibrary.request();
 
     if (storagePermission.isGranted &&
         mediaLocationPermission.isGranted &&
-        manageExternalStoragePermission.isGranted) {
+        manageExternalStoragePermission.isGranted &&
+        mediaLibrary.isGranted) {
       setState(() {
         gotPermission = true;
       });

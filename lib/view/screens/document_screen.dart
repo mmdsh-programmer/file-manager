@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DocumentPage extends StatefulWidget {
@@ -35,7 +34,7 @@ class _DocumentPageState extends State<DocumentPage> {
         title: Text(widget.documentType),
       ),
       body: _files.isEmpty
-          ? Center(child: Text('No files found'))
+          ? Center(child: Text('فایلی یافت نشد'))
           : ListView.builder(
               itemCount: _files.length,
               itemBuilder: (context, index) {
@@ -51,7 +50,9 @@ class _DocumentPageState extends State<DocumentPage> {
 Future<bool> _requestPermission() async {
   var status = await Permission.storage.status;
   if (!status.isGranted) {
+    status = await Permission.manageExternalStorage.request();
     status = await Permission.storage.request();
+    status = await Permission.mediaLibrary.request();
   }
   return status.isGranted;
 }
@@ -61,20 +62,17 @@ Future<List<FileSystemEntity>> _getFiles() async {
   bool permissionGranted = await _requestPermission();
   if (!permissionGranted) return [];
 
-  // Get the external storage directories
-  List<Directory>? directories = await getExternalStorageDirectories();
-  if (directories == null || directories.isEmpty) return [];
+  // Get the external storage directory
+  Directory directory =
+      Directory('/storage/emulated/0'); // Common external storage path
+  if (!await directory.exists()) return [];
 
-  // Log the directories being accessed
-  for (Directory directory in directories) {
-    print('Accessing directory: ${directory.path}');
-  }
+  // Log the directory being accessed
+  print('Accessing directory: ${directory.path}');
 
-  // Recursively list all files
+  // Recursively list all files while avoiding restricted directories
   List<FileSystemEntity> files = [];
-  for (Directory directory in directories) {
-    await _listFiles(directory, files);
-  }
+  await _listFiles(directory, files);
 
   return files;
 }
@@ -83,9 +81,13 @@ Future<void> _listFiles(
     Directory directory, List<FileSystemEntity> files) async {
   await for (FileSystemEntity entity
       in directory.list(recursive: true, followLinks: false)) {
-    if (entity is File) {
-      files.add(entity);
-      print('Found file: ${entity.path}'); // Log the file path
+    try {
+      if (entity is File) {
+        files.add(entity);
+        print('Found file: ${entity.path}'); // Log the file path
+      }
+    } catch (e) {
+      print('Failed to access ${entity.path}: $e'); // Log the error
     }
   }
 }
