@@ -357,7 +357,7 @@ class ImagePreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Image Preview')),
+      appBar: AppBar(title: Text('پیش نمایش فایل تصویری')),
       body: PhotoView(
         imageProvider: FileImage(File(filePath)),
       ),
@@ -374,7 +374,7 @@ class PDFPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('PDF Preview')),
+      appBar: AppBar(title: Text('پیش نمایش فایل pdf')),
       body: PDFView(filePath: filePath),
     );
   }
@@ -412,7 +412,7 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Video Preview')),
+      appBar: AppBar(title: Text('پیش نمایش فایل ویدیویی')),
       body: Center(
         child: _controller.value.isInitialized
             ? AspectRatio(
@@ -456,9 +456,9 @@ class _AudioPreviewScreenState extends State<AudioPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Audio Preview')),
+      appBar: AppBar(title: Text('پیش نمایش فایل صوتی')),
       body: Center(
-        child: Text('Playing Audio...'),
+        child: Text('در حال پخش صدا ...'),
       ),
     );
   }
@@ -477,15 +477,15 @@ class TextPreviewScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
-            appBar: AppBar(title: Text('Text Preview')),
+            appBar: AppBar(title: Text('پیش نمایش فایل متنی')),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(snapshot.data ?? 'Error loading file'),
+              child: Text(snapshot.data ?? 'مشکل در نمایش فایل'),
             ),
           );
         } else {
           return Scaffold(
-            appBar: AppBar(title: Text('Text Preview')),
+            appBar: AppBar(title: Text('پیش نمایش فایل متن')),
             body: Center(child: CircularProgressIndicator()),
           );
         }
