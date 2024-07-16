@@ -403,7 +403,18 @@ class _HomePageState extends State<HomePage> {
                                           const Text("انتقال"),
                                         ],
                                       ),
-                                    )
+                                    ),
+                                    PopupMenuItem(
+                                      value: 'button4',
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Icon(Icons.copy, color: orage2),
+                                          const Text("تکثیر"),
+                                        ],
+                                      ),
+                                    ),
                                   ];
                                 },
                                 onSelected: (value) async {
@@ -415,14 +426,11 @@ class _HomePageState extends State<HomePage> {
                                             .then((value) {
                                           setState(() {});
                                         });
-                                        ;
                                       } else {
                                         await entity.delete().then((value) {
                                           setState(() {});
                                         });
-                                        ;
                                       }
-
                                       break;
                                     case 'button2':
                                       showDialog(
@@ -461,13 +469,34 @@ class _HomePageState extends State<HomePage> {
                                           );
                                         },
                                       );
-
                                       break;
                                     case 'button3':
                                       selectedFile = entity;
                                       setState(() {
                                         isMoving = true;
                                       });
+                                      break;
+                                    case 'button4':
+                                      String path = entity.path;
+                                      String fileName =
+                                          FileManager.basename(entity);
+                                      String newName;
+                                      String newPath;
+                                      if (FileManager.isFile(entity)) {
+                                        int lastDot = fileName.lastIndexOf('.');
+                                        if (lastDot == -1) {
+                                          newName = "${fileName}_copy";
+                                        } else {
+                                          newName =
+                                              "${fileName.substring(0, lastDot)}_copy${fileName.substring(lastDot)}";
+                                        }
+                                      } else {
+                                        newName = "${fileName}_copy";
+                                      }
+                                      newPath =
+                                          "${entity.parent.path}/$newName";
+                                      await File(entity.path).copy(newPath);
+                                      setState(() {});
                                       break;
                                   }
                                 },
